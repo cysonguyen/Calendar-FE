@@ -179,11 +179,11 @@ export default function GroupDetail({ groupId }) {
                                 )
                             }
                         </Box>
-                        <StaffTable 
+                        <StaffTable
                             rows={groupId === 'add' ? null : group?.Users}
                             initialColumns={columns(router)}
-                            selectedUsers={selectedUsers}
-                            onSelect={onChangeSelectedUsers}
+                            selectedUsers={disabledEdit ? null : selectedUsers}
+                            onSelect={disabledEdit ? null : onChangeSelectedUsers}
                             allowAdd={groupId === 'add'}
                             allowSelect={!disabledEdit}
                         />
