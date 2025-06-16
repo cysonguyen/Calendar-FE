@@ -1,6 +1,6 @@
 'use client';
+import { BASE_URL } from "@/utils/const";
 import axios from "../index";
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 console.log('BASE_URL', BASE_URL);
 
 

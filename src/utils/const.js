@@ -4,4 +4,5 @@ export const ROLES = {
     LEADER: 'LEADER',
 }
 
+export const BASE_URL = 'https://api.calendar-app.xyz/api'
 

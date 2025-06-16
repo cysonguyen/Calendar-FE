@@ -1,5 +1,6 @@
+import { BASE_URL } from "@/utils/const";
 import axios from "../index";
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
 
 export async function getMeetingByIdApi(meetingId) {
   return await axios.get(`${BASE_URL}/meeting/${meetingId}`);
