@@ -1,6 +1,8 @@
 'use client';
 import axios from "../index";
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+console.log('BASE_URL', BASE_URL);
+
 
 export async function login(formData) {
     return await axios.post(`${BASE_URL}/auth/login`, formData);
