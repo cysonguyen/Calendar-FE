@@ -126,14 +126,14 @@ export default function Schedules() {
         {
             field: 'id', headerName: 'ID', headerClassName: 'bold-header',
             cellClassName: 'bold-cell',
-            width: 100
+            minWidth: 50
         },
-        { field: 'title', headerName: 'Title', flex: 1 },
-        { field: 'description', headerName: 'Description', flex: 1 },
-        { field: 'start_time', headerName: 'Start Time', width: 150 },
-        { field: 'end_time', headerName: 'End Time', width: 150 },
+        { field: 'title', headerName: 'Title', flex: 1, minWidth: 150 },
+        { field: 'description', headerName: 'Description', flex: 1, minWidth: 250 },
+        { field: 'start_time', headerName: 'Start Time', minWidth: 150 },
+        { field: 'end_time', headerName: 'End Time', minWidth: 150 },
         {
-            field: 'actions', headerName: 'Actions', flex: 1, align: 'right', headerAlign: 'right',
+            field: 'actions', headerName: 'Actions', flex: 1, align: 'right', headerAlign: 'right', minWidth: 150,
             sortable: false,
             renderCell: (params) => {
                 return (
@@ -218,7 +218,7 @@ export default function Schedules() {
                         )
                     }
                 </Box>
-                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                         {
                             view !== viewOptions.list && (

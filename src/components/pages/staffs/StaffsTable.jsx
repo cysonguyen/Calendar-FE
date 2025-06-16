@@ -110,12 +110,3 @@ function rowTransform(rows) {
         }
     })
 }
-
-function filterRows(rows, query) {
-    const filteredRows = rows.filter((row) => {
-        return Object.keys(query).every((key) => {
-            return row[key].toLowerCase().includes(query[key].toLowerCase());
-        });
-    });
-    return filteredRows;
-}

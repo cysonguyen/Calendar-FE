@@ -40,8 +40,8 @@ export default function ProtectedLayout({ children }) {
         sx={{
           flexGrow: 1,
           paddingTop: 8,
-          width: { sm: `calc(100% - 240px)` },
         }}
+        width={`calc(100% - 240px)`}
       >
         {children}
         <br />

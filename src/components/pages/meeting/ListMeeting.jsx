@@ -39,9 +39,6 @@ export default function ListMeeting({ scheduleId }) {
         enabled: !!scheduleId && scheduleId !== "add",
     });
 
-    console.log('check schedule', schedule);
-
-
     const { data, isLoading } = useQuery({
         queryKey: ["listMeeting", scheduleId, dateRange],
         queryFn: () => getScheduleByIdApi({ scheduleId, dateRange }),
@@ -61,8 +58,6 @@ export default function ListMeeting({ scheduleId }) {
     const handleChangeDateRange = useCallback((key, value) => {
         setDateRangeFilter((prev) => ({ ...prev, [key]: dayjs(value).toISOString() }));
     }, []);
-
-    console.log('dateRangeFilter', dateRangeFilter);
 
     const handleCloseNotification = useCallback(() => {
         setOpenNotification(false);
@@ -89,7 +84,7 @@ export default function ListMeeting({ scheduleId }) {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, alignItems: { xs: 'flex-start', sm: 'center' } }}>
                     <DateTimeRangePicker initialValue={dateRangeFilter} onChange={handleChangeDateRange} />
                     <Button variant="contained" color="inherit" size="large"
                         onClick={() => setDateRange(dateRangeFilter)}
@@ -103,7 +98,6 @@ export default function ListMeeting({ scheduleId }) {
                             }
                             return job.cycle_start <= cycle.cycle_index;
                         });
-                        console.log('check jobsInCycle', jobsInCycle);
                         const sortMeetings = cycle.Meetings?.sort((a, b) => dayjs(a.start_time).isAfter(dayjs(b.start_time)) ? -1 : 1);
                         return <Card key={cycle.cycle_index} sx={{ padding: 2, gap: 2, display: 'flex', flexDirection: 'column' }}>
                             <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>

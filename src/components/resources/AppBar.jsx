@@ -124,8 +124,6 @@ export default function AppBar({ onDrawerToggle }) {
     router.push('/login');
   };
 
-  console.log('notification', data);
-
   return (
     <MuiAppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>

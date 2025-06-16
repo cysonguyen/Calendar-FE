@@ -1,4 +1,4 @@
-import { BASE_URL } from '@/utils/const';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 import axios from 'axios';
 
 const axiosInstance = axios.create({

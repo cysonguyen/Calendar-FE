@@ -3,7 +3,6 @@ export const validateEmail = (email) => {
 }
 
 export const validateDateString = (dateStr) => {
-    console.log(dateStr);
     let date = dateStr;
     if (typeof dateStr !== 'string') {
         date = String(dateStr);

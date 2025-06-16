@@ -31,11 +31,9 @@ export function JobDetail({ scheduleId, indexCycle, listStaffs, disabledEdit }) 
         return { jobs };
     }, [data, isLoading])
 
-    console.log('disabledEdit', disabledEdit);
-
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between", alignItems: { xs: "flex-start", sm: "center" } }}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                     <Typography fontWeight="bold">Jobs</Typography>
                     {
@@ -46,7 +44,7 @@ export function JobDetail({ scheduleId, indexCycle, listStaffs, disabledEdit }) 
                         )
                     }
                 </Box>
-                <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
+                <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
                     <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center" }}>
                         <Typography>Job Type:</Typography>
                         <Select
@@ -86,8 +84,6 @@ function JobItemInfo({ job, listStaffs, scheduleId, indexCycle, disabledEdit }) 
         return job?.Users?.some((e) => e.id == user?.id);
     }, [disabledEdit, job.Users, user?.id]);
 
-    console.log('allowEdit', allowEdit, disabledEdit);
-
     if (isUpdateJobOpen) {
         return (
             <JobDialog
@@ -107,7 +103,7 @@ function JobItemInfo({ job, listStaffs, scheduleId, indexCycle, disabledEdit }) 
         <Card>
             <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                 <Box>
-                    <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center", justifyContent: "space-between" }}>
+                    <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1, alignItems: { xs: "flex-start", sm: "center" }, justifyContent: "space-between" }}>
                         <Typography fontWeight="bold">{job.title} - {job.closed}/{job.total} tasks</Typography>
                         <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center" }}>
                             <Chip label={job.status === "IN_PROGRESS" ? "In Progress" : "Closed"}
@@ -129,10 +125,10 @@ function JobItemInfo({ job, listStaffs, scheduleId, indexCycle, disabledEdit }) 
                     <Box>
                         <Typography>Deadline: {job?.deadline ? dayjs(job?.deadline).format("HH:mm, DD/MM/YYYY") : "N/A"}</Typography>
                     </Box>
-                    <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center", justifyContent: "space-between" }}>
-                        <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center" }}>
+                    <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1, alignItems: { xs: "flex-start", sm: "center" }, justifyContent: "space-between" }}>
+                        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1, alignItems: { xs: "flex-start", sm: "center" } }}>
                             <Typography>Assign to:</Typography>
-                            <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center" }}>
+                            <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1, alignItems: { xs: "flex-start", sm: "center" } }}>
                                 {job.Users?.map((user) => (
                                     <Chip key={user.id} label={user.full_name} />
                                 ))}
@@ -168,7 +164,7 @@ function JobItemInfo({ job, listStaffs, scheduleId, indexCycle, disabledEdit }) 
                                         <Card key={task.id}>
                                             <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                                                 <Box sx={{ display: "flex", flexDirection: "column" }}>
-                                                    <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center", justifyContent: "space-between" }}>
+                                                    <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1, alignItems: { xs: "flex-start", sm: "center" }, justifyContent: "space-between" }}>
                                                         <Typography>{task.title}</Typography>
                                                         <Chip label={task.status === "IN_PROGRESS" ? "In Progress" : "Closed"}
                                                             color={task.status === "IN_PROGRESS" ? "primary" : ""} />
@@ -181,7 +177,7 @@ function JobItemInfo({ job, listStaffs, scheduleId, indexCycle, disabledEdit }) 
                                                     }
                                                 </Box>
                                                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1, }}>
-                                                    <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center" }}>
+                                                    <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1, alignItems: { xs: "flex-start", sm: "center" } }}>
                                                         <Typography>Assign to:</Typography>
                                                         <Chip label={job?.Users?.find((user) => user.id == task.assignee_id)?.full_name} />
                                                     </Box>
@@ -211,7 +207,6 @@ function JobDialog({ onClose, initialJob, listStaffs, scheduleId, indexCycle, di
     const [job, setJob] = useState(initialJob);
     const [selectedStaffs, setSelectedStaffs] = useState(initialJob?.Users?.map((user) => user.id) ?? []);
     const handleChange = useCallback((value, key) => {
-        console.log(value, key);
         setJob({ ...job, [key]: value });
     }, [job]);
     const [searchStaff, setSearchStaff] = useState("");
@@ -220,9 +215,6 @@ function JobDialog({ onClose, initialJob, listStaffs, scheduleId, indexCycle, di
         type: "error",
         message: "",
     });
-
-    console.log(job);
-
 
     const handleCloseNotification = () => {
         setOpenNotification(false);
@@ -332,14 +324,12 @@ function JobDialog({ onClose, initialJob, listStaffs, scheduleId, indexCycle, di
         });
     }, [job]);
 
-    console.log('disabledEdit', disabledEdit);
-
     return (
         <Card>
             <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                     <TextField size="small" label="Title" value={job?.title ?? ""} onChange={(e) => handleChange(e.target.value, "title")} />
-                    <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
+                    <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1 }}>
                         <TextField size="small" fullWidth label="Description" value={job?.description ?? ""} onChange={(e) => handleChange(e.target.value, "description")} />
                         <TextField size="small" fullWidth label="Deadline" disabled={disabledEdit} type="date" InputLabelProps={{
                             shrink: true,
@@ -347,7 +337,7 @@ function JobDialog({ onClose, initialJob, listStaffs, scheduleId, indexCycle, di
                     </Box>
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                         <Typography>Assign to</Typography>
-                        <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+                        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
                             <TextField
                                 size="small"
                                 label="Search"
@@ -382,7 +372,7 @@ function JobDialog({ onClose, initialJob, listStaffs, scheduleId, indexCycle, di
                         </Box>
                     </Box>
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                        <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center", justifyContent: "space-between" }}>
+                        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1, alignItems: { xs: "flex-start", sm: "center" }, justifyContent: "space-between" }}>
                             <Box sx={{ display: "flex", flexDirection: "row", gap: 1, alignItems: "center" }}>
                                 <Typography>Tasks</Typography>
                                 <Chip label={job?.status === "IN_PROGRESS" ? "In Progress" : "Closed"}
@@ -446,9 +436,6 @@ function JobDialog({ onClose, initialJob, listStaffs, scheduleId, indexCycle, di
 
 function TaskItemDetail({ task, onDelete, index, listStaffs, selectedStaffs, onUpdateTask, disabledEdit }) {
     const [searchStaff, setSearchStaff] = useState("");
-
-    console.log('disabledEdit', disabledEdit);
-
     const staffsOptions = useMemo(() => {
         if (!listStaffs) return [];
         let filteredStaffs = listStaffs;
@@ -466,7 +453,7 @@ function TaskItemDetail({ task, onDelete, index, listStaffs, selectedStaffs, onU
         <Card >
             <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }} >
                 <TextField size="small" label="Title" value={task?.title ?? ""} onChange={(e) => onUpdateTask?.(index, "title", e.target.value)} />
-                <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
+                <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1 }}>
                     <TextField size="small" fullWidth label="Description" value={task?.description ?? ""} onChange={(e) => onUpdateTask?.(index, "description", e.target.value)} />
                     <TextField size="small" fullWidth label="Deadline" disabled={disabledEdit} type="date" InputLabelProps={{
                         shrink: true,
@@ -474,7 +461,7 @@ function TaskItemDetail({ task, onDelete, index, listStaffs, selectedStaffs, onU
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                     <Typography>Assign to</Typography>
-                    <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+                    <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
                         <TextField
                             size="small"
                             label="Search"

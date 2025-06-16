@@ -78,6 +78,14 @@ export default function GroupDetail({ groupId }) {
         setSelectedUsers(newRowSelectionModel);
     }, []);
 
+    const handleAddStaff = useCallback((newRowSelectionModel) => {
+        if (newRowSelectionModel.length > 0) {
+            setSelectedUsers((prev) => {
+                return [...new Set([...prev, ...newRowSelectionModel])];
+            });
+        }
+    }, []);
+
     const onFinish = useCallback((res) => {
         if (!res.errors) {
             setOpenNotification(true);
@@ -182,7 +190,7 @@ export default function GroupDetail({ groupId }) {
                         <StaffTable
                             rows={groupId === 'add' ? null : group?.Users}
                             initialColumns={columns(router)}
-                            selectedUsers={disabledEdit ? null : selectedUsers}
+                            selectedUsers={disabledEdit ? [] : selectedUsers}
                             onSelect={disabledEdit ? null : onChangeSelectedUsers}
                             allowAdd={groupId === 'add'}
                             allowSelect={!disabledEdit}
@@ -193,16 +201,17 @@ export default function GroupDetail({ groupId }) {
             <Snackbar onClose={() => setOpenNotification(false)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} open={openNotification} autoHideDuration={3000}>
                 <Alert severity={message.status}>{message.message}</Alert>
             </Snackbar>
-            <Modal open={isOpenEditModal} onClose={() => setIsOpenEditModal(false)}>
-
-                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '900px', width: '100%', bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
+            <Modal
+                open={isOpenEditModal}
+                onClose={() => setIsOpenEditModal(false)}>
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '900px', width: { xs: '90%', sm: '70%' }, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxHeight: '80vh', overflow: 'auto' }}>
-                        <Typography variant="h6">Change staff in group</Typography>
+                        <Typography variant="h6">Add staffs in group</Typography>
                         <StaffTable
                             rows={null}
                             initialColumns={columns(router)}
                             selectedUsers={selectedUsers}
-                            onSelect={onChangeSelectedUsers}
+                            onSelect={handleAddStaff}
                             allowAdd={true}
                         />
                     </Box>

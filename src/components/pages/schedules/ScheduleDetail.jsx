@@ -165,6 +165,14 @@ export default function ScheduleDetail({ scheduleId }) {
         setSelectedUsers(users);
     }, []);
 
+    const handleAddStaff = useCallback((newRowSelectionModel) => {
+        if (newRowSelectionModel.length > 0) {
+            setSelectedUsers((prev) => {
+                return [...new Set([...prev, ...newRowSelectionModel])];
+            });
+        }
+    }, []);
+
     const handleSave = useCallback(() => {
         const payload = { ...schedule, userIds: structuredClone(selectedUsers), group_ids: structuredClone(selectedGroups) };
         if (selectedGroups.length === 0) {
@@ -248,19 +256,19 @@ export default function ScheduleDetail({ scheduleId }) {
                                     </Box>
                                     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                                         <InputField
-                                            sx={{ width: "50%" }}
+                                            sx={{ width: { xs: "100%", sm: "50%" } }}
                                             label="Title"
                                             value={schedule?.title ?? ""}
                                             onChange={(value) => handleChangeDetail("title", value)}
                                             required
                                         />
                                         <InputField
-                                            sx={{ width: "50%" }}
+                                            sx={{ width: { xs: "100%", sm: "50%" } }}
                                             label="Description"
                                             value={schedule?.description ?? ""}
                                             onChange={(value) => handleChangeDetail("description", value)}
                                         />
-                                        <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+                                        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
                                             <InputField
                                                 label="Start time"
                                                 value={
@@ -338,7 +346,7 @@ export default function ScheduleDetail({ scheduleId }) {
 
                                     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                                         <Typography>Select by Group</Typography>
-                                        <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+                                        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
                                             <TextField
                                                 size="small"
                                                 label="Search"
@@ -347,12 +355,11 @@ export default function ScheduleDetail({ scheduleId }) {
                                                 onChange={(e) => setSearchGroup(e.target.value)}
                                             />
                                             <Select
-                                                fullWidth
+                                                
                                                 multiple
                                                 size="small"
                                                 value={selectedGroups}
                                                 onChange={(value) => {
-                                                    console.log(value.target.value);
                                                     setSelectedGroups(value.target.value);
                                                 }}
                                                 renderValue={(values) => {
@@ -431,8 +438,7 @@ export default function ScheduleDetail({ scheduleId }) {
                                     top: "50%",
                                     left: "50%",
                                     transform: "translate(-50%, -50%)",
-                                    maxWidth: "900px",
-                                    width: "100%",
+                                    width: { xs: '90%', sm: '70%' },
                                     bgcolor: "background.paper",
                                     boxShadow: 24,
                                     p: 4,
@@ -447,12 +453,12 @@ export default function ScheduleDetail({ scheduleId }) {
                                         overflow: "auto",
                                     }}
                                 >
-                                    <Typography variant="h6">Change staff in schedule</Typography>
+                                    <Typography variant="h6">Add staffs in schedule</Typography>
                                     <StaffTable
                                         rows={null}
                                         initialColumns={columns(router)}
                                         selectedUsers={selectedUsers}
-                                        onSelect={onChangeSelectedUsers}
+                                        onSelect={handleAddStaff}
                                         allowAdd={true}
                                     />
                                 </Box>
@@ -563,12 +569,12 @@ function ScheduleInfo({ schedule }) {
                 }
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+                <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
                     <Typography sx={{ fontWeight: "bold" }}>Time:</Typography>
                     <Typography>{dayjs(schedule.start_time).format("HH:mm")} - {dayjs(schedule.end_time).format("HH:mm")} - {dayjs(schedule.start_time).format("DD/MM/YYYY")}</Typography>
                     {
                         schedule.is_repeat && (
-                            <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+                            <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
                                 <Typography sx={{ fontWeight: "bold" }}>Repeat:</Typography>
                                 <Typography> {getIntervalText(schedule.interval, schedule.interval_count)} </Typography>
                             </Box>

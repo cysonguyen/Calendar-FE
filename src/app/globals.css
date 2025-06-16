@@ -16,6 +16,10 @@ body {
   color: rgb(var(--foreground-rgb));
 }
 
+.calendar-wrapper {
+  overflow-x: auto;
+}
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -28,6 +32,7 @@ body {
   min-height: 80px;
   background: #fafafa;
   border-radius: 4px;
+  min-width: 100px;
 }
 
 .day-number {
@@ -60,6 +65,7 @@ body {
   padding: 6px 0;
   background-color: #f0f0f0;
   border-bottom: 1px solid #ccc;
+  min-width: 100px;
 }
 
 .today {

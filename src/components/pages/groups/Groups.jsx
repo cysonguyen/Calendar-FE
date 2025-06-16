@@ -70,14 +70,14 @@ export default function Groups() {
 
     const columns = [
         {
-            field: 'id', headerName: 'ID', flex: 1, headerClassName: 'bold-header',
+            field: 'id', headerName: 'ID', flex: 1, minWidth: 50, headerClassName: 'bold-header',
             cellClassName: 'bold-cell'
         },
-        { field: 'name', headerName: 'Name', flex: 1 },
-        { field: 'description', headerName: 'Description', flex: 1, sortable: false },
-        { field: 'updatedAt', headerName: 'Updated At', flex: 1, sortable: false },
+        { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
+        { field: 'description', headerName: 'Description', flex: 1, sortable: false, minWidth: 250 },
+        { field: 'updatedAt', headerName: 'Updated At', flex: 1, sortable: false, minWidth: 150 },
         {
-            field: 'actions', headerName: 'Actions', flex: 1, align: 'right', headerAlign: 'right',
+            field: 'actions', headerName: 'Actions', flex: 1, align: 'right', headerAlign: 'right', minWidth: 150,
             sortable: false,
             renderCell: (params) => {
                 return (
@@ -100,8 +100,6 @@ export default function Groups() {
     ];
 
     const onFinish = useCallback((res) => {
-        console.log('res', res);
-
         if (!res.errors) {
             setOpenNotification(true);
             setMessage({
@@ -188,7 +186,7 @@ export default function Groups() {
                     top: '40%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: '50%',
+                    width: { xs: '90%', sm: '70%' },
                     padding: 2,
                 }}>
                     <Box>

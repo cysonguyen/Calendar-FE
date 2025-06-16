@@ -1,10 +1,9 @@
 'use client';
 
 import { useQuery } from "@tanstack/react-query";
-import { Box, Button, Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { getUser } from "@/app/api/client/account";
-import { ROLES } from "@/utils/const";
 export default function StaffDetail({ staffId }) {
     const { data: user, isLoading } = useQuery({
         queryKey: ['staff', staffId],
@@ -25,11 +24,6 @@ export default function StaffDetail({ staffId }) {
                         <Typography variant="body2">Work place: {user?.work_place ?? 'N/A'}</Typography>
                         <Typography variant="body2">MSNV: {user?.msnv ?? 'N/A'}</Typography>
                     </Box>
-                </Box>
-            </Paper>
-            <Paper sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Typography variant="h4">Meeting report</Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 </Box>
             </Paper>
         </Box>

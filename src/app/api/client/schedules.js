@@ -1,5 +1,5 @@
 import axios from "../index";
-import { BASE_URL } from "@/utils/const";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function getSchedulesApi({ userId, dateRange, ...query }) {
     return await axios.get(`${BASE_URL}/schedule/list/${userId}`, {

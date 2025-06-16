@@ -21,7 +21,7 @@ function DateTimeRangePicker({ onChange, initialValue }) {
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Stack spacing={2} direction="row">
+            <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
                 <DateTimePicker
                     label="Start Time"
                     value={start}

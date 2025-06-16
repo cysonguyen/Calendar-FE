@@ -37,7 +37,7 @@ export default function ChangePwModal({ open, onClose, onSave }) {
                 top: '40%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                width: '50%',
+                width: { xs: '90%', sm: '60%' },
                 padding: 2,
             }}>
                 <Box sx={{

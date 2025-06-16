@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useUser } from './useUser';
-import { BASE_URL } from '@/utils/const';
 import { useQueryClient } from '@tanstack/react-query';
 import { v4 as uuidv4 } from 'uuid';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const useNotification = () => {
     const token = useRef(localStorage.getItem('token'));

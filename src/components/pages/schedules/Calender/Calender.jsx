@@ -14,7 +14,6 @@ const Calendar = ({ date, meetingCycles }) => {
         }
     }, [date])
 
-    console.log('meetingCycles', meetingCycles);
     const days = useMemo(() => {
         const days = [];
         const currentDay = dayjs();
@@ -26,9 +25,6 @@ const Calendar = ({ date, meetingCycles }) => {
             const dayCycles = meetingCycles?.filter(cycle =>
                 dayjs(cycle.start_time).isSame(currentDate, 'day')
             );
-
-
-            console.log('dayCycles', dayCycles);
 
             days.push(
                 <DayCell key={day} date={currentDate} cycles={dayCycles} isToday={currentDate.isSame(currentDay, 'day')} />

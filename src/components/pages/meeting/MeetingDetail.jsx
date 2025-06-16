@@ -58,6 +58,14 @@ export default function MeetingDetail({ id, scheduleId, indexCycle }) {
         setOpenNotification(false);
     };
 
+    const handleAddStaff = useCallback((newRowSelectionModel) => {
+        if (newRowSelectionModel.length > 0) {
+            setSelectedUsers((prev) => {
+                return [...new Set([...prev, ...newRowSelectionModel])];
+            });
+        }
+    }, []);
+
     const handleSave = useCallback(async () => {
         const start_time = dayjs(schedule?.start_time).add((Number(indexCycle) - 1) * Number(schedule?.interval_count), schedule?.interval).toISOString();
         const end_time = dayjs(schedule?.end_time).add((Number(indexCycle) - 1) * Number(schedule?.interval_count), schedule?.interval).toISOString();
@@ -147,14 +155,14 @@ export default function MeetingDetail({ id, scheduleId, indexCycle }) {
 
                             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                                 <InputField
-                                    sx={{ width: "50%" }}
+                                    sx={{ width: { xs: "100%", sm: "50%" } }}
                                     label="Title"
                                     value={meeting?.title ?? ""}
                                     onChange={(value) => handleChangeDetail("title", value)}
                                     required
                                 />
                                 <InputField
-                                    sx={{ width: "50%" }}
+                                    sx={{ width: { xs: "100%", sm: "50%" } }}
                                     label="Description"
                                     value={meeting?.description ?? ""}
                                     onChange={(value) => handleChangeDetail("description", value)}
@@ -223,8 +231,7 @@ export default function MeetingDetail({ id, scheduleId, indexCycle }) {
                                         top: "50%",
                                         left: "50%",
                                         transform: "translate(-50%, -50%)",
-                                        maxWidth: "900px",
-                                        width: "100%",
+                                        width: { xs: '90%', sm: '70%' },
                                         bgcolor: "background.paper",
                                         boxShadow: 24,
                                         p: 4,
@@ -239,12 +246,12 @@ export default function MeetingDetail({ id, scheduleId, indexCycle }) {
                                             overflow: "auto",
                                         }}
                                     >
-                                        <Typography variant="h6">Change staff in schedule</Typography>
+                                        <Typography variant="h6">Add staffs in meeting</Typography>
                                         <StaffTable
                                             rows={schedule?.Users}
                                             initialColumns={columns(router)}
                                             selectedUsers={selectedUsers}
-                                            onSelect={onChangeSelectedUsers}
+                                            onSelect={handleAddStaff}
                                             allowAdd={true}
                                         />
                                     </Box>
@@ -387,7 +394,7 @@ export function ReportInfo({ report, meetingId, disabledEdit }) {
                         <ReportContainer open={isOpenReportModal} onClose={() => setIsOpenReportModal(false)} meetingId={meetingId} initialReport={report} />
                     </CardContent> :
                         <CardContent>
-                            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                            <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: { xs: "flex-start", sm: "space-between" }, gap: 1 }}>
                                 <Typography sx={{ fontWeight: "bold" }}>{report?.title ?? "No Title"}</Typography>
                                 {
                                     !disabledEdit &&

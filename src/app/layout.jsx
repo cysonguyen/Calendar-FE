@@ -11,10 +11,6 @@ export const metadata = {
   description: 'A calendar application built with Next.js and MUI',
 };
 
-setInterval(() => {
-  console.log('Hello CI/CD');
-}, 1000);
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

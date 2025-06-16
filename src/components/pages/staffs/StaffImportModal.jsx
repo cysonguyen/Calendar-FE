@@ -83,7 +83,7 @@ export default function StaffImportModal({ open, onClose, isLoading }) {
                     top: '40%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: 800,
+                    width: { xs: '90%', sm: '70%' },
                     padding: 2,
                 }}>
                     <Box sx={{

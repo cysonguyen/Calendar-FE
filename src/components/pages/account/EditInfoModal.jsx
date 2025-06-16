@@ -1,4 +1,3 @@
-import { ROLES } from "@/utils/const";
 import { Modal, Box, Typography, Paper, TextField, Button } from "@mui/material";
 import dayjs from "dayjs";
 import { useState, useCallback } from "react";
@@ -28,7 +27,7 @@ export default function EditInfoModal({ open, onClose, onSave, user }) {
                 top: '40%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                width: 800,
+                width: { xs: '90%', sm: '70%' },
                 padding: 2,
             }}>
                 <Box sx={{
@@ -95,6 +94,7 @@ export default function EditInfoModal({ open, onClose, onSave, user }) {
                         size="small"
                         label="MSNV"
                         value={info?.msnv ?? ''}
+                        onChange={(e) => handleChange('msnv', e.target.value)}
                     />
                 </Box>
                 <Box sx={{

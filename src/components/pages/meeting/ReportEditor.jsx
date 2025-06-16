@@ -28,7 +28,7 @@ const ReportEditor = ({ onSubmit, initialContent, initialTitle, onClose }) => {
                     onChange={(value) => refContent.current = value}
                     config={{
                         readonly: false,
-                        height: 200,
+                        height: 400,
                         toolbarSticky: false,
                         buttons: [
                             'bold',

@@ -1,5 +1,5 @@
 import axios from "../index";
-import { BASE_URL } from "@/utils/const";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function getNotificationApi({ userId }) {
     return await axios.get(`${BASE_URL}/notification/${userId}`);

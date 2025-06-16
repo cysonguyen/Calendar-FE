@@ -1,6 +1,6 @@
 'use client';
-import { BASE_URL, ROLES } from "@/utils/const";
 import axios from "../index";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function login(formData) {
     return await axios.post(`${BASE_URL}/auth/login`, formData);
@@ -23,6 +23,7 @@ export async function changeInfoApi(info, id) {
 };
 
 export async function getGroupsApi(userId) {
+    console.log(BASE_URL);
     return await axios.get(`${BASE_URL}/account/groups/${userId}`);
 };
 
