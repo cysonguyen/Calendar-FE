@@ -81,7 +81,7 @@ export default function ScheduleDetail({ scheduleId }) {
     }, [user?.role]);
 
     const { data: groupsData, isLoading: isLoadingGroups } = useQuery({
-        queryKey: ['groups', { name: debouncedSearch }],
+        queryKey: ["groups", { name: debouncedSearch }],
         queryFn: () => getGroupByQueryApi({ name: debouncedSearch }),
         enabled: isInitialized,
     });
@@ -98,7 +98,9 @@ export default function ScheduleDetail({ scheduleId }) {
         onSuccess: (data) => {
             setSchedule(data);
             setSelectedGroups(data?.Groups?.map((g) => g.id) ?? []);
-            setSelectedUsers(data?.Users?.map((user) => user.id)?.filter((id) => id !== null) ?? []);
+            setSelectedUsers(
+                data?.Users?.map((user) => user.id)?.filter((id) => id !== null) ?? []
+            );
         },
     });
 
@@ -117,7 +119,10 @@ export default function ScheduleDetail({ scheduleId }) {
                 setOpenNotification(true);
                 setMessage({
                     type: "error",
-                    message: typeof res.errors === "string" ? res.errors : 'Something went wrong',
+                    message:
+                        typeof res.errors === "string"
+                            ? res.errors
+                            : "Something went wrong",
                 });
             }
         },
@@ -125,7 +130,11 @@ export default function ScheduleDetail({ scheduleId }) {
 
     const { mutate: updateSchedule, isLoading: isUpdating } = useMutation({
         mutationFn: async (schedule) => {
-            const res = await updateScheduleApi({ userId: user.id, scheduleId, schedule });
+            const res = await updateScheduleApi({
+                userId: user.id,
+                scheduleId,
+                schedule,
+            });
 
             if (!res.errors) {
                 queryClient.invalidateQueries({ queryKey: ["schedules"] });
@@ -138,7 +147,10 @@ export default function ScheduleDetail({ scheduleId }) {
                 setOpenNotification(true);
                 setMessage({
                     type: "error",
-                    message: typeof res.errors === "string" ? res.errors : 'Something went wrong',
+                    message:
+                        typeof res.errors === "string"
+                            ? res.errors
+                            : "Something went wrong",
                 });
             }
         },
@@ -150,16 +162,16 @@ export default function ScheduleDetail({ scheduleId }) {
         return data;
     }, [data, isLoading, scheduleId]);
 
-    const [selectedGroups, setSelectedGroups] = useState(initialSchedule?.Groups?.map((g) => g.id) ?? []);
+    const [selectedGroups, setSelectedGroups] = useState(
+        initialSchedule?.Groups?.map((g) => g.id) ?? []
+    );
     const [schedule, setSchedule] = useState(initialSchedule);
     const [selectedUsers, setSelectedUsers] = useState([
         initialSchedule?.Users ?? [],
     ]);
     const handleChangeDetail = useCallback((key, value) => {
         setSchedule((prev) => ({ ...prev, [key]: value }));
-
     }, []);
-
 
     const onChangeSelectedUsers = useCallback((users) => {
         setSelectedUsers(users);
@@ -174,7 +186,11 @@ export default function ScheduleDetail({ scheduleId }) {
     }, []);
 
     const handleSave = useCallback(() => {
-        const payload = { ...schedule, userIds: structuredClone(selectedUsers), group_ids: structuredClone(selectedGroups) };
+        const payload = {
+            ...schedule,
+            userIds: structuredClone(selectedUsers),
+            group_ids: structuredClone(selectedGroups),
+        };
         if (selectedGroups.length === 0) {
             delete payload.group_ids;
         }
@@ -208,29 +224,202 @@ export default function ScheduleDetail({ scheduleId }) {
                 gap: 2,
             }}
         >
-            {
-                disabledEdit ? (
-                    <ScheduleInfo schedule={schedule} />
-                ) : (
-                    <Paper sx={{ p: 4, display: "flex", flexDirection: "column", gap: 4 }}>
-                        {
-                            scheduleId !== "add" && (
-                                <TabContext value={tab}>
-                                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                                        <TabList
-                                            onChange={handleChangeTab}
-                                            aria-label="Schedule tabs"
-                                        >
-                                            <Tab sx={{ width: "200px" }} label="Detail" value="detail" />
-                                            <Tab sx={{ width: "200px" }} label="Meeting" value="meeting" />
-                                        </TabList>
+            {disabledEdit ? (
+                <ScheduleInfo schedule={schedule} />
+            ) : (
+                <Paper sx={{ p: 4, display: "flex", flexDirection: "column", gap: 4 }}>
+                    {scheduleId !== "add" && (
+                        <TabContext value={tab}>
+                            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                                <TabList onChange={handleChangeTab} aria-label="Schedule tabs">
+                                    <Tab sx={{ width: "200px" }} label="Detail" value="detail" />
+                                    <Tab
+                                        sx={{ width: "200px" }}
+                                        label="Meeting"
+                                        value="meeting"
+                                    />
+                                </TabList>
+                            </Box>
+                        </TabContext>
+                    )}
+                    {tab === "detail" && (
+                        <>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                }}
+                            >
+                                <Typography sx={{ fontWeight: "bold" }} variant="h4">
+                                    {scheduleId === "add" ? "Add Schedule" : "Schedule Detail"}
+                                </Typography>
+                                {!disabledEdit && (
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        size="small"
+                                        onClick={handleSave}
+                                    >
+                                        Save
+                                    </Button>
+                                )}
+                            </Box>
+                            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                                <InputField
+                                    sx={{ width: { xs: "100%", sm: "50%" } }}
+                                    label="Title"
+                                    value={schedule?.title ?? ""}
+                                    onChange={(value) => handleChangeDetail("title", value)}
+                                    required
+                                />
+                                <InputField
+                                    sx={{ width: { xs: "100%", sm: "50%" } }}
+                                    label="Description"
+                                    value={schedule?.description ?? ""}
+                                    onChange={(value) => handleChangeDetail("description", value)}
+                                />
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: { xs: "column", sm: "row" },
+                                        gap: 2,
+                                    }}
+                                >
+                                    <InputField
+                                        label="Start time"
+                                        value={
+                                            schedule?.start_time
+                                                ? dayjs(schedule.start_time).format("YYYY-MM-DDTHH:mm")
+                                                : ""
+                                        }
+                                        onChange={(value) =>
+                                            handleChangeDetail("start_time", value)
+                                        }
+                                        type="datetime-local"
+                                        required
+                                    />
+                                    <InputField
+                                        label="End time"
+                                        value={
+                                            schedule?.end_time
+                                                ? dayjs(schedule.end_time).format("YYYY-MM-DDTHH:mm")
+                                                : ""
+                                        }
+                                        onChange={(value) => handleChangeDetail("end_time", value)}
+                                        type="datetime-local"
+                                        required
+                                    />
+                                </Box>
+
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: 1,
+                                    }}
+                                >
+                                    <Checkbox
+                                        checked={schedule?.is_repeat ?? false}
+                                        onChange={(value) =>
+                                            handleChangeDetail("is_repeat", !schedule?.is_repeat)
+                                        }
+                                    />
+                                    <Typography sx={{ fontSize: "14px" }}>
+                                        Repeat schedule
+                                    </Typography>
+                                </Box>
+                                {schedule?.is_repeat && (
+                                    <Box
+                                        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                                    >
+                                        <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+                                            <SelectField
+                                                label="Interval"
+                                                value={schedule?.interval ?? ""}
+                                                onChange={(value) =>
+                                                    handleChangeDetail("interval", value)
+                                                }
+                                                options={INTERVAL_OPTIONS}
+                                                required
+                                            />
+                                            <InputField
+                                                label="Interval count"
+                                                value={schedule?.interval_count ?? ""}
+                                                onChange={(value) =>
+                                                    handleChangeDetail("interval_count", value)
+                                                }
+                                                type="number"
+                                                required
+                                            />
+                                        </Box>
+                                        <InputField
+                                            label="When expires"
+                                            value={
+                                                schedule?.when_expires
+                                                    ? dayjs(schedule.when_expires).format(
+                                                        "YYYY-MM-DDTHH:mm"
+                                                    )
+                                                    : ""
+                                            }
+                                            onChange={(value) =>
+                                                handleChangeDetail("when_expires", value)
+                                            }
+                                            type="datetime-local"
+                                        />
                                     </Box>
-                                </TabContext>
-                            )
-                        }
-                        {
-                            tab === "detail" && (
-                                <>
+                                )}
+                            </Box>
+
+                            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                                <Typography>Select by Group</Typography>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: { xs: "column", sm: "row" },
+                                        gap: 2,
+                                    }}
+                                >
+                                    <TextField
+                                        sx={{ width: { xs: "100%", sm: "50%" } }}
+                                        size="small"
+                                        label="Search"
+                                        fullWidth
+                                        value={searchGroup}
+                                        onChange={(e) => setSearchGroup(e.target.value)}
+                                    />
+                                    <Select
+                                        sx={{ width: { xs: "100%", sm: "50%" } }}
+                                        multiple
+                                        size="small"
+                                        value={selectedGroups}
+                                        onChange={(value) => {
+                                            setSelectedGroups(value.target.value);
+                                        }}
+                                        renderValue={(values) => {
+                                            if (!values || values.length === 0) return "Choose group";
+                                            const groupsData = groups?.filter((g) =>
+                                                values.some((v) => v == g.id)
+                                            );
+                                            return groupsData.map((g) => g.name).join(", ");
+                                        }}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {groups?.map((group) => (
+                                            <MenuItem key={group.id} value={group.id}>
+                                                <Checkbox
+                                                    checked={selectedGroups.some((v) => v == group.id)}
+                                                />
+                                                <ListItemText primary={group.name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </Box>
+                            </Box>
+
+                            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                                <Box sx={{ display: "flex", flexDirection: "column" }}>
                                     <Box
                                         sx={{
                                             display: "flex",
@@ -238,255 +427,107 @@ export default function ScheduleDetail({ scheduleId }) {
                                             justifyContent: "space-between",
                                         }}
                                     >
-                                        <Typography sx={{ fontWeight: "bold" }} variant="h4">
-                                            {scheduleId === "add" ? "Add Schedule" : "Schedule Detail"}
+                                        <Typography sx={{ fontSize: "14px" }}>
+                                            {scheduleId === "add"
+                                                ? "Select staffs"
+                                                : "Staffs in schedule"}
                                         </Typography>
-                                        {
-                                            !disabledEdit && (
-                                                <Button
-                                                    variant="contained"
-                                                    color="primary"
-                                                    size="small"
-                                                    onClick={handleSave}
-                                                >
-                                                    Save
-                                                </Button>
-                                            )
-                                        }
-                                    </Box>
-                                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                                        <InputField
-                                            sx={{ width: { xs: "100%", sm: "50%" } }}
-                                            label="Title"
-                                            value={schedule?.title ?? ""}
-                                            onChange={(value) => handleChangeDetail("title", value)}
-                                            required
-                                        />
-                                        <InputField
-                                            sx={{ width: { xs: "100%", sm: "50%" } }}
-                                            label="Description"
-                                            value={schedule?.description ?? ""}
-                                            onChange={(value) => handleChangeDetail("description", value)}
-                                        />
-                                        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
-                                            <InputField
-                                                label="Start time"
-                                                value={
-                                                    schedule?.start_time
-                                                        ? dayjs(schedule.start_time).format("YYYY-MM-DDTHH:mm")
-                                                        : ""
-                                                }
-                                                onChange={(value) => handleChangeDetail("start_time", value)}
-                                                type="datetime-local"
-                                                required
-                                            />
-                                            <InputField
-                                                label="End time"
-                                                value={
-                                                    schedule?.end_time
-                                                        ? dayjs(schedule.end_time).format("YYYY-MM-DDTHH:mm")
-                                                        : ""
-                                                }
-                                                onChange={(value) => handleChangeDetail("end_time", value)}
-                                                type="datetime-local"
-                                                required
-                                            />
-                                        </Box>
-
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                alignItems: "center",
-                                                gap: 1,
-                                            }}
-                                        >
-                                            <Checkbox
-                                                checked={schedule?.is_repeat ?? false}
-                                                onChange={(value) =>
-                                                    handleChangeDetail("is_repeat", !schedule?.is_repeat)
-                                                }
-                                            />
-                                            <Typography sx={{ fontSize: "14px" }}>Repeat schedule</Typography>
-                                        </Box>
-                                        {schedule?.is_repeat && (
-                                            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                                                <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-                                                    <SelectField
-                                                        label="Interval"
-                                                        value={schedule?.interval ?? ""}
-                                                        onChange={(value) => handleChangeDetail("interval", value)}
-                                                        options={INTERVAL_OPTIONS}
-                                                        required
-                                                    />
-                                                    <InputField
-                                                        label="Interval count"
-                                                        value={schedule?.interval_count ?? ""}
-                                                        onChange={(value) =>
-                                                            handleChangeDetail("interval_count", value)
-                                                        }
-                                                        type="number"
-                                                        required
-                                                    />
-                                                </Box>
-                                                <InputField
-                                                    label="When expires"
-                                                    value={
-                                                        schedule?.when_expires
-                                                            ? dayjs(schedule.when_expires).format("YYYY-MM-DDTHH:mm")
-                                                            : ""
-                                                    }
-                                                    onChange={(value) => handleChangeDetail("when_expires", value)}
-                                                    type="datetime-local"
-                                                />
-                                            </Box>
+                                        {scheduleId !== "add" && (
+                                            <Button
+                                                variant="text"
+                                                color="primary"
+                                                size="small"
+                                                onClick={() => setIsOpenEditModal(true)}
+                                            >
+                                                Add Staff
+                                            </Button>
                                         )}
                                     </Box>
-
-
-                                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                                        <Typography>Select by Group</Typography>
-                                        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
-                                            <TextField
-                                                size="small"
-                                                label="Search"
-                                                fullWidth
-                                                value={searchGroup}
-                                                onChange={(e) => setSearchGroup(e.target.value)}
-                                            />
-                                            <Select
-                                                
-                                                multiple
-                                                size="small"
-                                                value={selectedGroups}
-                                                onChange={(value) => {
-                                                    setSelectedGroups(value.target.value);
-                                                }}
-                                                renderValue={(values) => {
-                                                    if (!values || values.length === 0) return "Choose group";
-                                                    const groupsData = groups?.filter((g) => values.some((v) => v == g.id));
-                                                    return groupsData.map((g) => g.name).join(", ");
-                                                }}
-                                                MenuProps={MenuProps}
-                                            >
-                                                {groups?.map((group) => (
-                                                    <MenuItem key={group.id} value={group.id}>
-                                                        <Checkbox checked={selectedGroups.some((v) => v == group.id)} />
-                                                        <ListItemText primary={group.name} />
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </Box>
-
-                                    </Box>
-
-                                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                                        <Box sx={{ display: "flex", flexDirection: "column" }}>
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    flexDirection: "row",
-                                                    justifyContent: "space-between",
-                                                }}
-                                            >
-                                                <Typography sx={{ fontSize: "14px" }}>
-                                                    {scheduleId === "add"
-                                                        ? "Select staffs"
-                                                        : "Staffs in schedule"}
-                                                </Typography>
-                                                {scheduleId !== "add" && (
-                                                    <Button
-                                                        variant="text"
-                                                        color="primary"
-                                                        size="small"
-                                                        onClick={() => setIsOpenEditModal(true)}
-                                                    >
-                                                        Add Staff
-                                                    </Button>
-                                                )}
-                                            </Box>
-                                            <StaffTable
-                                                rows={scheduleId === "add" ? null : schedule?.Users}
-                                                initialColumns={columns(router)}
-                                                selectedUsers={selectedUsers}
-                                                onSelect={onChangeSelectedUsers}
-                                                allowAdd={scheduleId === "add"}
-                                            />
-                                        </Box>
-                                    </Box>
-                                </>
-                            )
-                        }
-                        {
-                            tab === "meeting" && (
-                                <ListMeeting scheduleId={scheduleId} schedule={schedule} />
-                            )
-                        }
-
-                        <Snackbar
-                            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                            open={openNotification}
-                            autoHideDuration={3000}
-                            onClose={handleCloseNotification}
-                        >
-                            <Alert severity={message.type}>{message.message}</Alert>
-                        </Snackbar>
-                        <Modal open={isOpenEditModal} onClose={() => setIsOpenEditModal(false)}>
-                            <Box
-                                sx={{
-                                    position: "absolute",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    width: { xs: '90%', sm: '70%' },
-                                    bgcolor: "background.paper",
-                                    boxShadow: 24,
-                                    p: 4,
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: 2,
-                                        maxHeight: "80vh",
-                                        overflow: "auto",
-                                    }}
-                                >
-                                    <Typography variant="h6">Add staffs in schedule</Typography>
                                     <StaffTable
-                                        rows={null}
+                                        rows={scheduleId === "add" ? null : schedule?.Users}
                                         initialColumns={columns(router)}
                                         selectedUsers={selectedUsers}
-                                        onSelect={handleAddStaff}
-                                        allowAdd={true}
+                                        onSelect={onChangeSelectedUsers}
+                                        allowAdd={scheduleId === "add"}
                                     />
                                 </Box>
-                                <Box
-                                    sx={{
-                                        mt: 2,
-                                        mr: 2,
-                                        display: "flex",
-                                        justifyContent: "flex-end",
-                                        gap: 2,
-                                    }}
-                                >
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={() => setIsOpenEditModal(false)}
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button variant="contained" color="primary" onClick={handleSave}>
-                                        Submit
-                                    </Button>
-                                </Box>
                             </Box>
-                        </Modal>
-                    </Paper>
-                )
-            }
+                        </>
+                    )}
+                    {tab === "meeting" && (
+                        <ListMeeting scheduleId={scheduleId} schedule={schedule} />
+                    )}
+
+                    <Snackbar
+                        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                        open={openNotification}
+                        autoHideDuration={3000}
+                        onClose={handleCloseNotification}
+                    >
+                        <Alert severity={message.type}>{message.message}</Alert>
+                    </Snackbar>
+                    <Modal
+                        open={isOpenEditModal}
+                        onClose={() => setIsOpenEditModal(false)}
+                    >
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                width: { xs: "90%", sm: "70%" },
+                                bgcolor: "background.paper",
+                                boxShadow: 24,
+                                p: 4,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: 2,
+                                    maxHeight: "80vh",
+                                    overflow: "auto",
+                                }}
+                            >
+                                <Typography variant="h6">Add staffs in schedule</Typography>
+                                <StaffTable
+                                    rows={null}
+                                    initialColumns={columns(router)}
+                                    selectedUsers={selectedUsers}
+                                    onSelect={handleAddStaff}
+                                    allowAdd={true}
+                                />
+                            </Box>
+                            <Box
+                                sx={{
+                                    mt: 2,
+                                    mr: 2,
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                    gap: 2,
+                                }}
+                            >
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={() => setIsOpenEditModal(false)}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleSave}
+                                >
+                                    Submit
+                                </Button>
+                            </Box>
+                        </Box>
+                    </Modal>
+                </Paper>
+            )}
         </Box>
     );
 }
@@ -562,33 +603,52 @@ function ScheduleInfo({ schedule }) {
         <Paper sx={{ p: 4, display: "flex", flexDirection: "column", gap: 2 }}>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <Typography variant="h4">{schedule.title}</Typography>
-                {
-                    schedule.description && (
-                        <Typography variant="body2" sx={{ fontStyle: "italic" }}>{schedule.description}</Typography>
-                    )
-                }
+                {schedule.description && (
+                    <Typography variant="body2" sx={{ fontStyle: "italic" }}>
+                        {schedule.description}
+                    </Typography>
+                )}
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: { xs: "column", sm: "row" },
+                        gap: 2,
+                    }}
+                >
                     <Typography sx={{ fontWeight: "bold" }}>Time:</Typography>
-                    <Typography>{dayjs(schedule.start_time).format("HH:mm")} - {dayjs(schedule.end_time).format("HH:mm")} - {dayjs(schedule.start_time).format("DD/MM/YYYY")}</Typography>
-                    {
-                        schedule.is_repeat && (
-                            <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
-                                <Typography sx={{ fontWeight: "bold" }}>Repeat:</Typography>
-                                <Typography> {getIntervalText(schedule.interval, schedule.interval_count)} </Typography>
-                            </Box>
-                        )
-                    }
+                    <Typography>
+                        {dayjs(schedule.start_time).format("HH:mm")} -{" "}
+                        {dayjs(schedule.end_time).format("HH:mm")} -{" "}
+                        {dayjs(schedule.start_time).format("DD/MM/YYYY")}
+                    </Typography>
+                    {schedule.is_repeat && (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: { xs: "column", sm: "row" },
+                                gap: 2,
+                            }}
+                        >
+                            <Typography sx={{ fontWeight: "bold" }}>Repeat:</Typography>
+                            <Typography>
+                                {" "}
+                                {getIntervalText(
+                                    schedule.interval,
+                                    schedule.interval_count
+                                )}{" "}
+                            </Typography>
+                        </Box>
+                    )}
                 </Box>
-
             </Box>
             <Divider />
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 <Typography sx={{ fontWeight: "bold" }}>Meetings:</Typography>
                 <ListMeeting scheduleId={schedule.id} schedule={schedule} />
             </Box>
-        </Paper >
+        </Paper>
     );
 }
 
